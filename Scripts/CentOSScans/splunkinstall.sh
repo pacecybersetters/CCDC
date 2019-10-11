@@ -48,10 +48,7 @@
  echo
  tar -xzvf /tmp/splunk-7.3.0-657388c7a488-Linux-x86_64.tgz -C /opt
  rm -f /tmp/splunk-7.3.0-657388c7a488-Linux-x86_64.tgz
- useradd splunk
- echo splunk:$splunkPassword > /tmp/pwdfile
- cat /tmp/pwdfile | chpasswd
- rm -f /tmp/pwdfile
+ useradd -r splunk
  echo
  echo "Splunk installed and splunk linux user created."
  echo
