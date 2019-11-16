@@ -11,46 +11,46 @@
 # This script will install the CHOCOLATEY package management system, 
 # OSQUERY 4.0.2 endpoint visibility agent, SYSMON event driver and
 # SPLUNK UNIVERSAL FORWARDER. In addition it will download the 
-# pre-determined configuration files.
+# predetermined configuration files.
 # ---------------------------------------------------------------------
-# Take not these configurations may need to be adjusted by the user as
+# Take note these configurations may need to be adjusted by the user as
 # needed. Every environment is different and should be treated as such.
 # ---------------------------------------------------------------------
 # The goal of this install script is to efficiently deploy the necessary
-# toolsets for effective system monitoring during the Collegiate Cyber
-# Defense Competition. This toolset represents a larger overall strategy
+# tool-sets for effective system monitoring during the Collegiate Cyber
+# Defense Competition. This tool-set represents a larger overall strategy
 # and should be tailored to your specific team.
 #
 #
-#
-#
-#
-#                             OSQUERY INSTALL
+#                             CHOCOLATEY/GIT INSTALL
 # ---------------------------------------------------------------------
 # Set the powershell execution policy to 'Bypass'.
 # Then download the chocolatey package manager from their website.
 #
-Write-Host '* Installing the chocolatey package manager' -ForegroundColor Magenta
+Write-Host '* Installing the chocolatey package manager...' -ForegroundColor Magenta
 Set-ExecutionPolicy Bypass -Scope Process -Force; 
 iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
 #
-# Install OSQUERYD DAEMON as a Windows SYSTEM level service.
-#
-Write-Host '* Installing the osquery daemon as a Windows Service' -ForegroundColor Magenta
-choco install osquery -params '"/InstallService"'
-#
 # Download github repository containing Windows configuration files.
 #
-# *****************Need to configure*******************************************************************************************************
+Write-Host '* Downloading the necessary configuration files...' -ForegroundColor Magenta
+git clone https://github.com/dbarr914/CCDC.git ~\
+#
+#                             OSQUERY INSTALL
+# ---------------------------------------------------------------------
+# Install OSQUERYD DAEMON as a Windows SYSTEM level service.
+#
+Write-Host '* Installing the osquery daemon as a Windows Service...' -ForegroundColor Magenta
+choco install osquery -params '"/InstallService"'
 #
 #
 # Copy OSQUERY PACKS into the 'C:\Program Files\osquery\packs' directory.
 #
-Copy-Item -path 'LOCATION OF GIT DOWNLOAD\*' -Destination 'C:\Program Files\osquery\packs\*' -Force
+Copy-Item -path '~\CCDC\osquery\packs\*' -Destination 'C:\Program Files\osquery\packs\*' -Force
 #
 #Copy OSQUERY Configuration File into the 'C:\Program Files\osquery\' directory.
 #
-Copy-Item -path 'LOCATION OF GIT DOWNLOAD\osquery.conf' -Destination 'C:\Program Files\osquery\' -Force
+Copy-Item -path '~\CCDC\osquery\osquery.conf' -Destination 'C:\Program Files\osquery\' -Force
 #
 # Restart the OSQUERY service.
 #
@@ -60,9 +60,9 @@ Copy-Item -path 'LOCATION OF GIT DOWNLOAD\osquery.conf' -Destination 'C:\Program
 # 
 # Check to see if the OSQUERY service is running. If it is continue to the next step, if not, error out.
 #
-$ServiceName = 'osqueryd' # Provide service name in variable.
+$osqServiceName = 'osqueryd' # Provide service name in variable.
 
-$osqService = Get-Service -Name $ServiceName # Store the command.
+$osqService = Get-Service -Name $osqServiceName # Store the command.
 
 Write-Host '* Getting OSQUERY Status...' -ForegroundColor Magenta # Display what is happening to the user.
 
@@ -93,19 +93,19 @@ Check-Osquery-Status
 Write-Host '* ' -ForegroundColor Magenta
 Write-Host '* ' -ForegroundColor Magenta
 Write-Host '* ' -ForegroundColor Magenta
-Set-ExecutionPolicy Bypass -Scope Process -Force; 
 #
 # Install SYSMON DRIVER as a Windows Service.
 #
-cd 'GIT DOWNLOAD LOCATION\sysmon\'   # NEED TO CONFIGURE *****************************************************************************************
+cd '~\CCDC\sysmon\'
 Write-Host '* Installing the sysmon driver...' -ForegroundColor Magenta
 .\Sysmon64.exe -i .\z-AlphaVersion.xml -h sha1,imphash -n               # Important Note! The configuration file should.
 #
+#
 # Check to see if the SYSMON service is running. If it is continue to the next step, if not, error out.
 #
-$ServiceName = 'Sysmon64' # Provide service name in variable.
+$sysServiceName = 'Sysmon64' # Provide service name in variable.
 
-$osqService = Get-Service -Name $ServiceName # Store the command.
+$sysService = Get-Service -Name $sysServiceName # Store the command.
 
 Write-Host '* Getting SYSMON Status...' -ForegroundColor Magenta # Display what is happening to the user.
 
@@ -114,8 +114,8 @@ Start-Sleep -seconds 5 # Take a second or five to relax.
 # Define check status function.
 function Check-Sysmon-Status {
 # Check if the status of the service is equal to 'Running'.
-  if ($osqService.Status -eq 'Running'){
-	Write-Host '* Service is Running' -ForegroundColor Green
+  if ($sysService.Status -eq 'Running'){
+	Write-Host '* Sysmon Service is Running' -ForegroundColor Green
 	Return # If the service is running break out of the function and continue.
 	} else { 
 	# Tell the user there was a problem and offer some troubleshooting guidance.
@@ -142,3 +142,9 @@ cd '~\'
 # Download the SPLUNK UNIVERSAL FORWARDER from the splunk.com website.
 Write-Host '* Downloading Splunk Universal Forwarder...' -ForegroundColor Magenta
 wget -O splunkforwarder-8.msi 'https://www.splunk.com/bin/splunk/DownloadActivityServlet?architecture=x86_64&platform=windows&version=8.0.0&product=universalforwarder&filename=splunkforwarder-8.0.0-1357bef0a7f6-x64-release.msi&wget=true'
+
+# Run the Splunk Forwarder Install Script.
+Write-Host '* Installing Splunk Universal Forwarder...' -ForegroundColor Magenta
+Start-Process -FilePath ~\CCDC\Scripts\WindowsScans\ForwarderInstallWindows.ps1 -Wait
+Pause
+
