@@ -54,13 +54,13 @@ disable_hugh_pages(){
 }
 
 increase_ulimit(){
+ echo "[*] Increasing ulimit..."
  ulimit -n 64000
  ulimit -u 20480
  echo "DefaultLimitFSIZE=-1" >> /etc/systemd/system.conf
  echo "DefaultLimitNOFILE=64000" >> /etc/systemd/system.conf
  echo "DefaultLimitNPROC=20480" >> /etc/systemd/system.conf
  echo
- echo "[*] Increasing ulimit..."
  echo "[*] ulimit Increased."
  echo
 }
@@ -84,19 +84,20 @@ install_splunk(){
 }
 
 add_user(){
+ echo "[*] Creating Splunk User....."
  useradd -r splunk
  chown -R splunk:splunk /opt/splunk
  echo
- echo "Creating Splunk User....."
- echo "Splunk User Created."
+ echo "[*] Splunk User Created."
  echo
 } 
  
 enable_ssl(){ 
+ echo "[*] Enabling SSL....."
+ echo
  echo "[settings]" > /opt/splunk/etc/system/local/web.conf
  echo "enableSplunkWebSSL = true" >> /opt/splunk/etc/system/local/web.conf
  echo
- echo "[*] Enabling SSL....."
  echo "[*] SSL enabled for Splunk Web using self-signed certificate."
  echo
 }
@@ -133,20 +134,21 @@ adjust_inputs(){
 mitigate_privs(){
  chown splunk:splunk /opt/splunk/etc/system/local/inputs.conf
  echo
- echo "[*] Running test start....."
+ echo "[*] Enabling Splunk to start at boot....."
+  /opt/splunk/bin/splunk enable boot-start -user splunk
  echo "[*] Complete."
  echo
- echo "[*] Enabling Splunk to start at boot....."
+ echo "[*] Running test start....."
+ runuser -l splunk -c '/opt/splunk/bin/splunk start --accept-license'
+ runuser -l splunk -c '/opt/splunk/bin/splunk stop'
  echo "[*] Complete."
+ echo
  echo
  echo "[*] Adjusting splunk-launch.conf to mitigate privilege escalation attack....."
- echo "[*] Complete."
- echo
- runuser -l splunk -c '/opt/splunk/bin/splunk start --accept-license'
- /opt/splunk/bin/splunk enable boot-start -user splunk
- runuser -l splunk -c '/opt/splunk/bin/splunk stop'
  chown root:splunk /opt/splunk/etc/splunk-launch.conf
  chmod 644 /opt/splunk/etc/splunk-launch.conf
+ echo "[*] Complete."
+ runuser -l splunk -c '/opt/splunk/bin/splunk start'
  echo
  echo
 }
@@ -180,7 +182,6 @@ add_user
 firewall_rules
 adjust_inputs
 mitigate_privs
-runuser -l splunk -c '/opt/splunk/bin/splunk start'
 splunk_check
 
 #                            OSQUERY INSTALL
