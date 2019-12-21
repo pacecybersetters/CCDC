@@ -3,7 +3,7 @@ $Date = (Get-Date).ToString('MM.dd.yyyy')
 
 $Title = 'System Inventory Report' 
  
-$AgentHeading = "Created by $Agent"
+$AgentHeading = "Created by: PaceCCDCTeam"
 
 $DateHeading = "Date Created: $Date"
 
@@ -17,56 +17,54 @@ $instSoft = Get-ItemProperty HKLM:\Software\Wow6432Node\Microsoft\Windows\Curren
 $localusr = Get-WmiObject -Class Win32_UserAccount -Filter "LocalAccount='True'" | Select PSComputername, Name, Status, Disabled, AccountType, Lockout, PasswordRequired, PasswordChangeable, SID | Format-Table –AutoSize 
 
 
-Write-Output "---------------------------------------------------"
-Write-Output "              $Title               " 
-Write-Output "---------------------------------------------------"
+Write-Output "---------------------------------------------------" -ForegroundColor Yellow
+Write-Output "                      $Title                       " -ForegroundColor Yellow
+Write-Output "---------------------------------------------------" -ForegroundColor Yellow
+Write-Output " "
+Write-Output $AgentHeading -ForegroundColor Magenta
+Write-Output $DateHeading  -ForegroundColor Magenta
+Write-Output " "
+Write-Output "---------------------------------------------------" -ForegroundColor Yellow
+Write-Output "          Operating System Information             " -ForegroundColor Yellow
+Write-Output "---------------------------------------------------" -ForegroundColor Yellow
 Write-Output " "
 
-Write-Output $AgentHeading  
-Write-Output $DateHeading  
-Write-Output " "
-
-Write-Output "---------------------------------------------------"
-Write-Output "          Operating System Information            " 
-Write-Output "---------------------------------------------------"
-Write-Output " "
-
-Write-Output "Operating System: $hstos $hstarc"
-Write-Output "Version Number: $hstosversion"
-Write-Output "Computer Name: $hstnme"
+Write-Output "Operating System: $hstos $hstarc" -ForegroundColor Magenta
+Write-Output "Version Number: $hstosversion" -ForegroundColor Magenta
+Write-Output "Computer Name: $hstnme" -ForegroundColor Magenta
 Write-Output " "
 
 
-Write-Output "                Installed Services                 " 
-Write-Output "---------------------------------------------------"
+Write-Output "                Installed Services                 " -ForegroundColor Green 
+Write-Output "---------------------------------------------------" -ForegroundColor Green
 Write-Output " "
-Write-Output $Srvc  
+Write-Output $Srvc  -ForegroundColor Magenta
 Write-Output " "
-Write-Output "                Running Processes                  " 
-Write-Output "---------------------------------------------------"
+Write-Output "                Running Processes                  " -ForegroundColor Green
+Write-Output "---------------------------------------------------" -ForegroundColor Green
 Write-Output " "
-Write-Output $Prcs 
+Write-Output $Prcs -ForegroundColor Magenta
 Write-Output " "
-Write-Output "                Installed Software                  " 
-Write-Output "---------------------------------------------------"
+Write-Output "                Installed Software                  " -ForegroundColor Green 
+Write-Output "---------------------------------------------------" -ForegroundColor Green
 Write-Output " "
-Write-Output $instSoft
-Write-Output " "
-
-Write-Output "---------------------------------------------------"
-Write-Output "                 User Information                  " 
-Write-Output "---------------------------------------------------"
+Write-Output $instSoft -ForegroundColor Magenta
 Write-Output " "
 
-Write-Output "                Local User Accounts                " 
-Write-Output "---------------------------------------------------"
+Write-Output "---------------------------------------------------" -ForegroundColor Yellow
+Write-Output "                 User Information                  " -ForegroundColor Yellow
+Write-Output "---------------------------------------------------" -ForegroundColor Yellow
 Write-Output " "
 
-Write-Output $localusr
+Write-Output "                Local User Accounts                " -ForegroundColor Green
+Write-Output "---------------------------------------------------" -ForegroundColor Green
+Write-Output " "
+
+Write-Output $localusr -ForegroundColor Magenta
 
 
-Write-Output "              User Accounts by Group               " 
-Write-Output "---------------------------------------------------"
+Write-Output "              User Accounts by Group               " -ForegroundColor Green
+Write-Output "---------------------------------------------------" -ForegroundColor Green
 Write-Output " "
 
 function Get-Accounts { 
@@ -135,52 +133,52 @@ New-Object PSObject -Property @{
 
  }
 
-Get-Accounts
+Get-Accounts 
 
 Write-Output " "
-Write-Output "                 Logged on Users                   " 
-Write-Output "---------------------------------------------------"
+Write-Output "                 Logged on Users                   " -ForegroundColor Green 
+Write-Output "---------------------------------------------------" -ForegroundColor Green
 Write-Output " "
 
 query USER
 
-Write-Output "---------------------------------------------------"
-Write-Output "              Networking Information               " 
-Write-Output "---------------------------------------------------"
+Write-Output "---------------------------------------------------" -ForegroundColor Yellow
+Write-Output "              Networking Information               " -ForegroundColor Yellow
+Write-Output "---------------------------------------------------" -ForegroundColor Yellow
 Write-Output " "
 
 Write-Output " "
-Write-Output "              IPAddress Information                " 
-Write-Output "---------------------------------------------------"
+Write-Output "              IPAddress Information                " -ForegroundColor Green
+Write-Output "---------------------------------------------------" -ForegroundColor Green
 Write-Output " "
 
 Get-NetIPAddress | Sort-Object -Property AddressFamily,AddressState |Format-Table -Property IPAddress,AddressFamily,InterfaceAlias,AddressState,InterfaceIndex -AutoSize 
 
 
 Write-Output " "
-Write-Output "              MACAddress Information                " 
-Write-Output "---------------------------------------------------"
+Write-Output "              MACAddress Information                " -ForegroundColor Green
+Write-Output "---------------------------------------------------" -ForegroundColor Green
 Write-Output " "
 
 Get-WmiObject win32_networkadapterconfiguration | Format-List -Property Caption,IPAddress,MACAddress
 
 Write-Output " "
-Write-Output "                  Routing Table                    " 
-Write-Output "---------------------------------------------------"
+Write-Output "                  Routing Table                    " -ForegroundColor Green
+Write-Output "---------------------------------------------------" -ForegroundColor Green
 Write-Output " "
 
 Get-NetRoute |Sort-Object -Descending -Property AddressFamily,NextHop,InterfaceAlias | Format-Table -Property AddressFamily,State,ifIndex,InterfaceAlias,NextHop
 
 Write-Output " "
-Write-Output "                   Open Ports                      " 
-Write-Output "---------------------------------------------------"
+Write-Output "                   Open Ports                      " -ForegroundColor Green
+Write-Output "---------------------------------------------------" -ForegroundColor Green
 Write-Output " "
 
 Get-NetTCPConnection | Sort-Object -Property State,RemoteAddress
 
 Write-Output " "
-Write-Output "                  Firewall Rules                   " 
-Write-Output "---------------------------------------------------"
+Write-Output "                  Firewall Rules                   " -ForegroundColor Green
+Write-Output "---------------------------------------------------" -ForegroundColor Green
 Write-Output " "
 
 Get-NetFirewallRule -PolicyStore ActiveStore | Format-Table -Property DisplayName,Enabled,Direction,Owner,PolicyStoreSource

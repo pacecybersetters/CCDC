@@ -29,7 +29,8 @@ hostname=$(hostname)                                                            
 operatingSystem=$(lsb_release -d | awk -F' ' '{ print $2,$3 }')                                  # Get operating system type & version information
 services=$(systemctl list-units --type=service --state=running --all)                            # List all running services on the system
 service_files=$(systemctl list-unit-files --type=service)                                        # List all services on the system
-dpkg=$(dpkg -l|sed 1,3d)                                                                         # Get a list of all packeges installed on the system
+yumrepos=$(yum repolist enabled |sed 1,5d)                                                       # List of all repositories installed on the system
+yuminstalled=$(yum list installed |sed 1,2d)                                                     # List all installed packeges on the system
 process_tree=$(pstree -pnh)                                                                      # Create a process tree of all currently running processes
 users=$(getent passwd |awk -F':' '{ print $1 }')                                                 # Get a list of all Users on the system
 systemUsers=$(getent passwd | grep -vwFf /etc/shells |awk -F: '{printf("%s:%s\n",$1,$3)}')       # Categorize  System/Service Users on the system
@@ -53,7 +54,7 @@ interface_stats=$(ip -s link)                      		  							             # Get
 ports=$(nmap -p 1-65535 -sV "$longIPAddress"|sed 1,3d)                                           # Get a list of all ports on the system
 listening_ports=$(ss -taulpe)												                   	 # Get tcp,udp,listening,process id's,numeric ports
 socket_files=$(lsof -i)                                                                          # Get a list of all files with network connections
-protocol_stats=$(ss -s)
+protocol_stats=$(ss -s)                                                                          # Get network statistics by protocol type
 firewall_rules=$(iptables -L)													                 # List all firewall rules
 etc_hosts=$(cat /etc/hosts)												                         # Read the /etc/hosts file
 
@@ -170,10 +171,15 @@ services(){
   echo
   echo -e "\e[92m$service_files\e[0m"
   echo
+  echo -e "\e[93m   Software  Repositories   "
+  echo -e "-----------------------------\e[0m"
+  echo
+  echo -e "\e[92m$yumrepos\e[0m"
+  echo
   echo -e "\e[93m Installed Software Packages "
   echo -e "-----------------------------\e[0m"
   echo
-  echo -e "\e[92m$dpkg\e[0m"
+  echo -e "\e[92m$yuminstalled\e[0m"
   echo
   echo -e "\e[93m      Running Processes      "
   echo -e "-----------------------------\e[0m"
