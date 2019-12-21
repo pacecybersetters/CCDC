@@ -8,7 +8,7 @@
 # at your own risk. The author holds no liability and will not be held
 # responsible for any damages done to systems or system configurations.
 # ---------------------------------------------------------------------
-# This script will install OSQUERY 4.0.2 endpoint visibility agent,
+# This script will install OSQUERY 4.1.1 endpoint visibility agent,
 # and SPLUNK INDEXER and other dependencies. In addition it will download 
 # the predetermined configuration files.
 # ---------------------------------------------------------------------
@@ -192,7 +192,15 @@ rpm -i osquery-4.1.1-1.linux.x86_64.rpm
 #                        CONFIGURATION DOWNLOADS
 # ---------------------------------------------------------------------
 
+cd ~/
+git clone https://github.com/dbarr914/CCDC.git
 
+
+#                    MOVE CONFIGS TO CORRECT LOCATIONS
+# ---------------------------------------------------------------------
+
+cp ~/CCDC-master/osquery/1.Linux/osquery.conf /etc/osquery/osquery.conf
+cp ~/CCDC-master/osquery/packs/* /etc/osquery/packs/
 
 
 
