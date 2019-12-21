@@ -228,7 +228,7 @@ git clone https://github.com/dbarr914/CCDC.git
 # ---------------------------------------------------------------------
 
 cp ~/CCDC-master/osquery/1.Linux/osquery.conf /etc/osquery/osquery.conf
-cp ~/CCDC-master/osquery/packs/* /etc/osquery/packs/
+cp -r ~/CCDC-master/osquery/packs/ /etc/osquery/packs/
 
 
 
