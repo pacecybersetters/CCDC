@@ -171,7 +171,30 @@ splunk_check(){
                  echo Splunk Enterprise has FAILED install!
  fi
 }
- 
+
+edit_inputs(){
+ echo "[*] Editing Splunk's input file....
+
+ cd /opt/splunk/etc/system/local
+
+ echo -e "[monitor:///var/log/osquery/osqueryd.results.log]\nindex = main\nsourcetype = osquery_results\n\n[monitor:///var/log/osquery/osqueryd.*INFO*]\nindex = main\nsourcetype = osquery_info\n\n" >> inputs.conf
+ echo -e "[monitor:///var/log/osquery/osqueryd.*ERROR*]\nindex = main\nsourcetype = osquery_error\n\n" >> inputs.conf
+ echo -e "[monitor:///var/log/osquery/osqueryd.*WARNING*]\nindex = main\nsourcetype = osquery_warning\n\n" >> inputs.conf
+
+ echo "[*] Complete."
+ echo "[*] Adding directories to monitor" 
+ cd /opt/splunk/bin/
+
+ sudo ./splunk add monitor /var/log
+ sudo ./splunk add monitor /etc/
+
+ echo "[*] Complete."
+ echo
+ echo "[*] Restarting Splunk..."
+ sudo ./splunk restart
+ echo "[*] Complete."
+ echo
+}
  
 disable_hugh_pages 
 increase_ulimit
@@ -183,6 +206,10 @@ firewall_rules
 adjust_inputs
 mitigate_privs
 splunk_check
+
+#                           EDIT SPLUNK INPUTS 
+# ---------------------------------------------------------------------
+edit_inputs
 
 #                            OSQUERY INSTALL
 # ---------------------------------------------------------------------
