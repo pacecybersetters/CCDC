@@ -69,7 +69,7 @@ download_splunk(){
  cd /tmp
  echo
  echo "[*] Downloading Splunk....."
- wget -O splunkforwarder-8.0.0-1357bef0a7f6-linux-2.6-x86_64.rpm 'https://www.splunk.com/bin/splunk/DownloadActivityServlet?architecture=x86_64&platform=linux&version=8.0.0&product=universalforwarder&filename=splunkforwarder-8.0.0-1357bef0a7f6-linux-2.6-x86_64.rpm&wget=true'
+ wget -O splunk-8.0.0-1357bef0a7f6-linux-2.6-x86_64.rpm 'https://www.splunk.com/bin/splunk/DownloadActivityServlet?architecture=x86_64&platform=linux&version=8.0.0&product=splunk&filename=splunk-8.0.0-1357bef0a7f6-linux-2.6-x86_64.rpm&wget=true'
  echo
  echo "[*] Splunk Downloaded."
  echo
@@ -77,10 +77,10 @@ download_splunk(){
 
 install_splunk(){
  echo "[*] Installing Splunk....."
- tar -xzvf /tmp/splunk-7.3.0-657388c7a488-Linux-x86_64.tgz -C /opt
+ rpm -i splunk-8.0.0-1357bef0a7f6-linux-2.6-x86_64.rpm
  echo
  echo "[*] Splunk Installed."
- rm -f /tmp/splunk-7.3.0-657388c7a488-Linux-x86_64.tgz
+ rm -f /tmp/splunk-8.0.0-1357bef0a7f6-linux-2.6-x86_64.rpm
 }
 
 add_user(){
