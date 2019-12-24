@@ -1,0 +1,55 @@
+<dashboard theme="dark">
+  <label>Asset Inventory</label>
+  <description>Monitors local hosts for listening ports.</description>
+  <row>
+    <panel>
+      <title>Remote Connections (Host Correlation)</title>
+      <table>
+        <title>Confirm with bro connection logs</title>
+        <search>
+          <query>index="osquery" source="/var/log/osquery/osqueryd.*" name=* snapshot{}.remote_address!=127.0.0.1
+|dedup "decorations.Hostname" 
+|table _time, "decorations.Hostname", "decorations.Host UUID", "decorations.IP Addresses", "snapshot{}.remote_address", "snapshot{}.remote_port", "snapshot{}.name"
+| rename _time AS "Time", "decorations.Hostname" AS Hostname, "decorations.Host UUID" AS UUID, "decorations.IP Addresses" AS "Source IP Address (v4)","snapshot{}.remote_address" AS "Remote Address" "snapshot{}.remote_port" AS "Remote Port", "snapshot{}.name" AS "Service Name"</query>
+          <earliest>rt-1m</earliest>
+          <latest>rt</latest>
+          <sampleRatio>1</sampleRatio>
+          <refresh>1m</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="count">20</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="percentagesRow">false</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="rowNumbers">false</option>
+        <option name="totalsRow">false</option>
+        <option name="wrap">true</option>
+      </table>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Listening Ports</title>
+      <table>
+        <title>From osquery agent</title>
+        <search>
+          <query>index="osquery" source="/var/log/osquery/osqueryd.*" name="pack_network-connections_linux_process_listening_port"
+| dedup "decorations.Hostname"
+|table "decorations.Hostname", "decorations.Host UUID", "decorations.IP Addresses", "snapshot{}.port", "snapshot{}.name"
+| rename "decorations.Hostname" AS Hostname, "decorations.Host UUID" AS UUID, "decorations.IP Addresses" AS "IP Address (v4)", "snapshot{}.port" AS "Port Number", "snapshot{}.name" AS "Service Name"</query>
+          <earliest>-15m</earliest>
+          <latest>now</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="count">20</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="percentagesRow">false</option>
+        <option name="rowNumbers">false</option>
+        <option name="totalsRow">false</option>
+        <option name="wrap">true</option>
+      </table>
+    </panel>
+  </row>
+</dashboard>
