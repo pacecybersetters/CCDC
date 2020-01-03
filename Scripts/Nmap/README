@@ -1,7 +1,6 @@
 When scanning a subnet for auditing purposes run the following:
 
-nmap -A -v <IP Address/CIDR> -oA nmapscan
-
+nmap -A -v -oA "$(date +%T)_nmap_scan" <IP Address/CIDR>
 
 To transform the xml output of the previous command into an html document, run the following:
 
