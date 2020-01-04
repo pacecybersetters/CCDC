@@ -110,8 +110,8 @@ install_osquery
 
 cp ~/Documents/CCDC-master/osquery/1.Linux/osquery.conf /etc/osquery/osquery.conf
 cp ~/Documents/CCDC-master/osquery/1.Linux/osquery.flags /etc/osquery/osquery.flags
-cp -rf ~/Documents/CCDC-master/osquery/1.Linux/packs/ /etc/osquery/packs
-cp -rf ~/Documents/CCDC-master/osquery/1.Linux/packs/ /usr/share/osquery/packs
+cp -rf ~/Documents/CCDC-master/osquery/1.Linux/packs/ /etc/osquery/packs/
+cp -rf ~/Documents/CCDC-master/osquery/1.Linux/packs/ /usr/share/osquery/packs/
 
 osqueryctl config-check
 osqueryctl start
@@ -120,11 +120,31 @@ osqueryctl start
 #                         CONFIGURING INPUTS.CONF
 # ---------------------------------------------------------------------
 
-cd /opt/splunkforwarder/etc/system/local 
-echo -e "[monitor:///var/log/osquery/osqueryd.results.log]\nindex = osquery\nsourcetype = osquery_results\n\n" >> inputs.conf
+edit_inputs(){
+ 
+ echo "[*] Editing Splunk's input file....
 
-echo -e "[monitor:///var/log/osquery/osqueryd.*ERROR*]\nindex = osquery\nsourcetype = osquery_error\n\n" >> inputs.conf
+ cd /opt/splunkforwarder/etc/system/local 
 
-echo -e "[monitor:///var/log/osquery/osqueryd.*WARNING*]\nindex = osquery\nsourcetype = osquery_warning\n\n" >> inputs.conf
+ echo -e "[monitor:///var/log/osquery/osqueryd.results.log]\nindex = osquery\nsourcetype = osquery_results\n\n" >> inputs.conf
+ echo -e "[monitor:///var/log/osquery/osqueryd.*ERROR*]\nindex = osquery\nsourcetype = osquery_error\n\n" >> inputs.conf
+ echo -e "[monitor:///var/log/osquery/osqueryd.*WARNING*]\nindex = osquery\nsourcetype = osquery_warning\n\n" >> inputs.conf
+ echo -e "[monitor:///var/log/osquery/osqueryd.snapshot.log\nindex = osquery\nsourcetype = osquery_results\n\n" >> inputs.conf
 
-echo -e "[monitor:///var/log/osquery/osqueryd.snapshot.log\nindex = osquery\nsourcetype = osquery_snapshot\n\n" >> inputs.conf
+ echo "[*] Complete."
+ echo "[*] Adding directories to monitor..." 
+ 
+ cd /opt/splunk/bin/
+ 
+ echo "[*] Complete."
+ echo
+ echo "[*] Restarting Splunk..."
+ 
+ sudo ./splunk restart
+ 
+ echo "[*] Complete."
+ echo
+
+}
+
+edit_inputs
