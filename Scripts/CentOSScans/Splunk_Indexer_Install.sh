@@ -97,7 +97,7 @@ install_splunk(){
 
 add_user(){
  echo "[*] Creating Splunk User....."
- useradd -r splunk
+ useradd -r splunk -s /bin/nologin
  chown -R splunk:splunk /opt/splunk
  echo
  echo "[*] Splunk User Created."
