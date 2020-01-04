@@ -24,10 +24,14 @@
 # ---------------------------------------------------------------------
 #
 # Install GITHUB, WGET, LSB_RELEASE, NMAP
-#
+
 sudo yum clean all
 sudo yum -y update
-yum -y install git wget redhat-lsb-core nmap yum-utils lsof epel-release
+
+#                       YUM PACKAGES INSTALL
+# ---------------------------------------------------------------------
+
+sudo yum -y install git wget redhat-lsb-core nmap yum-utils lsof epel-release
 
 #                        CONFIGURATION DOWNLOADS
 # ---------------------------------------------------------------------
@@ -38,7 +42,7 @@ git clone https://github.com/dbarr914/CCDC.git
 #
 #                         SPLUNK INDEXER INSTALL
 # ---------------------------------------------------------------------
-#
+
 disable_hugh_pages(){ 
  echo "never" > /sys/kernel/mm/transparent_hugepage/enabled
  echo "never" > /sys/kernel/mm/transparent_hugepage/defrag
@@ -180,6 +184,7 @@ splunk_check(){
 
 #                           EDIT SPLUNK INPUTS 
 # ---------------------------------------------------------------------
+
 edit_inputs(){
  echo "[*] Editing Splunk's input file....
 
@@ -231,6 +236,7 @@ install_osquery(){
 
 #                    MOVE CONFIGS TO CORRECT LOCATIONS
 # ---------------------------------------------------------------------
+
 config_osquery(){
  cp ~/Documents/CCDC-master/osquery/1.Linux/osquery.conf /etc/osquery/osquery.conf
  cp ~/Documents/CCDC-master/osquery/1.Linux/osquery.flags /etc/osquery/osquery.flags
