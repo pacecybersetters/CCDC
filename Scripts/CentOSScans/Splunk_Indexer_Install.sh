@@ -81,7 +81,7 @@ download_splunk(){
  cd /tmp
  echo
  echo "[*] Downloading Splunk....."
- wget -O splunk-8.0.0-1357bef0a7f6-linux-2.6-x86_64.rpm 'https://www.splunk.com/bin/splunk/DownloadActivityServlet?architecture=x86_64&platform=linux&version=8.0.0&product=splunk&filename=splunk-8.0.0-1357bef0a7f6-linux-2.6-x86_64.rpm&wget=true'
+ wget -O splunk-8.tgz 'https://www.splunk.com/bin/splunk/DownloadActivityServlet?architecture=x86_64&platform=linux&version=8.0.1&product=splunk&filename=splunk-8.0.1-6db836e2fb9e-Linux-x86_64.tgz&wget=true'
  echo
  echo "[*] Splunk Downloaded."
  echo
@@ -89,10 +89,10 @@ download_splunk(){
 
 install_splunk(){
  echo "[*] Installing Splunk....."
- rpm -i splunk-8.0.0-1357bef0a7f6-linux-2.6-x86_64.rpm
+ tar -xzvf /tmp/splunk-8.tgz -C /opt
  echo
- echo "[*] Splunk Installed."
- rm -f /tmp/splunk-8.0.0-1357bef0a7f6-linux-2.6-x86_64.rpm
+ echo "\e[93m[*] Splunk Enterprise Installed.\e[0m"
+ rm -f /tmp/splunk-8.tgz
 }
 
 add_user(){
@@ -147,7 +147,7 @@ mitigate_privs(){
  chown splunk:splunk /opt/splunk/etc/system/local/inputs.conf
  echo
  echo "[*] Enabling Splunk to start at boot....."
-  /opt/splunk/bin/splunk enable boot-start -user splunk
+ /opt/splunk/bin/splunk enable boot-start -user splunk
  echo "[*] Complete."
  echo
  echo "[*] Running test start....."
@@ -168,8 +168,7 @@ mitigate_privs(){
 splunk_check(){
  if [[ -f /opt/splunk/bin/splunk ]]
          then
-                 echo Splunk Enterprise
-                 cat /opt/splunk/etc/splunk.version | head -1
+                 echo "Splunk Enterprise $(cat /opt/splunk/etc/splunk.version | head -1)"
                  echo "has been installed, configured, and started!"
                  echo "Visit the Splunk server using https://hostNameORip:8000 as mentioned above."
                  echo
@@ -179,7 +178,7 @@ splunk_check(){
                  echo
                  echo
          else
-                 echo Splunk Enterprise has FAILED install!
+                 echo "Splunk Enterprise has FAILED install!"
  fi
 }
 
@@ -197,7 +196,7 @@ edit_inputs(){
  echo -e "[monitor:///var/log/osquery/osqueryd.snapshot.log\nindex = osquery\nsourcetype = osquery:snapshots\n\n" >> inputs.conf
  
  echo "[*] Complete."
- echo "[*] Adding directories to monitor" 
+ echo "[*] Adding directories to monitor..." 
  cd /opt/splunk/bin/
 
  # sudo ./splunk add monitor /var/log
@@ -247,10 +246,10 @@ install_osquery(){
 # ---------------------------------------------------------------------
 
 config_osquery(){
- cp ~/Documents/CCDC/osquery/1.Linux/osquery.conf /etc/osquery/osquery.conf
- cp ~/Documents/CCDC/osquery/1.Linux/osquery.flags /etc/osquery/osquery.flags
- cp -rf ~/Documents/CCDC/osquery/1.Linux/packs/ /etc/osquery/packs/
- cp -rf ~/Documents/CCDC/osquery/1.Linux/packs/ /usr/share/osquery/packs/
+ cp ./Documents/CCDC/osquery/1.Linux/osquery.conf /etc/osquery/osquery.conf
+ cp ./Documents/CCDC/osquery/1.Linux/osquery.flags /etc/osquery/osquery.flags
+ cp -rf ./Documents/CCDC/osquery/1.Linux/packs/ /etc/osquery/packs/
+ cp -rf ./Documents/CCDC/osquery/1.Linux/packs/ /usr/share/osquery/packs/
 
  osqueryctl config-check
  osqueryctl start
@@ -260,7 +259,7 @@ disable_hugh_pages
 increase_ulimit
 download_splunk
 install_splunk
-add_user
+#add_user
 # enable_ssl
 firewall_rules
 adjust_inputs
