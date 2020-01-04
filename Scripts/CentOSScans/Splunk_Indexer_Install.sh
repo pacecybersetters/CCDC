@@ -187,7 +187,7 @@ splunk_check(){
 # ---------------------------------------------------------------------
 
 edit_inputs(){
- echo "[*] Editing Splunk's input file....
+ echo "[*] Editing Splunk's input file...."
 
  cd /opt/splunk/etc/system/local
 
