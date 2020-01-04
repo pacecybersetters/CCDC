@@ -13,7 +13,7 @@ Any scripts in this repo should be printed out and executed manually.
 
 Setup scripts should be run based on the host's operating system.
 
-For Testing:
+*For Testing:
 
 Make executable with: 
 			
