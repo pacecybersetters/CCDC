@@ -19,8 +19,9 @@
 # tool-sets for effective system monitoring during the Collegiate Cyber
 # Defense Competition. This tool-set represents a larger overall strategy
 # and should be tailored to your specific team.
-#
-#                         DEPENDENCY INSTALL
+
+
+#                         INITIAL UPDATE
 # ---------------------------------------------------------------------
 #
 # Install GITHUB, WGET, LSB_RELEASE, NMAP
@@ -28,7 +29,7 @@
 sudo yum clean all
 sudo yum -y update
 
-#                       YUM PACKAGES INSTALL
+#                         YUM PACKAGES INSTALL
 # ---------------------------------------------------------------------
 
 sudo yum -y install git wget redhat-lsb-core nmap yum-utils lsof epel-release
