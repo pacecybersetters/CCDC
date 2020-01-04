@@ -120,7 +120,6 @@ edit_inputs(){
  echo -e "[monitor:///var/log/osquery/osqueryd.*WARNING*]\nindex = osquery\nsourcetype = osquery_warning\n\n" >> inputs.conf
  echo -e "[monitor:///var/log/osquery/osqueryd.snapshot.log\nindex = osquery\nsourcetype = osquery_results\n\n" >> inputs.conf
  echo "[*] Complete."
- echo "[*] Adding directories to monitor..." 
  
  cd /opt/splunkforwarder/bin/
  
