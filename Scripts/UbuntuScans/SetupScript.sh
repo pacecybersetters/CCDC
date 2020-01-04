@@ -74,9 +74,18 @@ install_splunk(){
  rm -f /tmp/splunk-8.tgz
 }
 
+add_user(){
+ echo "[*] Creating Splunk User....."
+ useradd -r splunk -s /bin/nologin
+ chown -R splunk:splunk /opt/splunk
+ echo
+ echo "[*] Splunk User Created."
+ echo
+} 
+
 download_splunk
 install_splunk
-
+add_user
 
 cd /opt/splunkforwarder/bin
 sudo ./splunk start --accept-license
@@ -108,13 +117,16 @@ install_osquery(){
 download_osquery
 install_osquery
 
-cp ~/Documents/CCDC-master/osquery/1.Linux/osquery.conf /etc/osquery/osquery.conf
-cp ~/Documents/CCDC-master/osquery/1.Linux/osquery.flags /etc/osquery/osquery.flags
-cp -rf ~/Documents/CCDC-master/osquery/1.Linux/packs/ /etc/osquery/packs/
-cp -rf ~/Documents/CCDC-master/osquery/1.Linux/packs/ /usr/share/osquery/packs/
+config_osquery(){
+ sudo cp ./Documents/CCDC-master/osquery/1.Linux/osquery.conf /etc/osquery/osquery.conf
+ sudo cp ./Documents/CCDC-master/osquery/1.Linux/osquery.flags /etc/osquery/osquery.flags
+ sudo cp -rf ./Documents/CCDC-master/osquery/1.Linux/packs/ /etc/osquery/packs
+ sudo cp -rf ./Documents/CCDC-master/osquery/1.Linux/packs/ /usr/share/osquery/packs
+ sudo osqueryctl config-check
+ sudo osqueryctl start
+}
 
-osqueryctl config-check
-osqueryctl start
+config_osquery
 
 
 #                         CONFIGURING INPUTS.CONF
