@@ -94,13 +94,18 @@ install_osquery(){
 download_osquery
 install_osquery
 
-cp ~/Documents/CCDC-master/osquery/1.Linux/osquery.conf /etc/osquery/osquery.conf
-cp ~/Documents/CCDC-master/osquery/1.Linux/osquery.flags /etc/osquery/osquery.flags
-cp -rf ~/Documents/CCDC-master/osquery/1.Linux/packs/ /etc/osquery/packs/
-cp -rf ~/Documents/CCDC-master/osquery/1.Linux/packs/ /usr/share/osquery/packs/
+#                    MOVE CONFIGS TO CORRECT LOCATIONS
+# ---------------------------------------------------------------------
+config_osquery(){
+ cp ~/Documents/CCDC-master/osquery/1.Linux/osquery.conf /etc/osquery/osquery.conf
+ cp ~/Documents/CCDC-master/osquery/1.Linux/osquery.flags /etc/osquery/osquery.flags
+ cp -rf ~/Documents/CCDC-master/osquery/1.Linux/packs/ /etc/osquery/packs
+ cp -rf ~/Documents/CCDC-master/osquery/1.Linux/packs/ /usr/share/osquery/packs
+ osqueryctl config-check
+ osqueryctl start
+}
 
-osqueryctl config-check
-osqueryctl start
+config_osquery
 
 
 #                         CONFIGURING INPUTS.CONF
@@ -117,7 +122,7 @@ edit_inputs(){
  echo "[*] Complete."
  echo "[*] Adding directories to monitor..." 
  
- cd /opt/splunk/bin/
+ cd /opt/splunkforwarder/bin/
  
  echo "[*] Complete."
  echo
