@@ -200,8 +200,12 @@ edit_inputs(){
  echo "[*] Adding directories to monitor" 
  cd /opt/splunk/bin/
 
- sudo ./splunk add monitor /var/log
- sudo ./splunk add monitor /etc/
+ # sudo ./splunk add monitor /var/log
+ # sudo ./splunk add monitor /etc/
+sudo ./splunk add index osquery
+sudo ./splunk add index threathunting
+sudo ./splunk add index windows
+sudo ./splunk add index bro
 
  echo "[*] Complete."
  echo
