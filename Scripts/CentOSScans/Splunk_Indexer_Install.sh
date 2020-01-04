@@ -25,9 +25,16 @@
 #
 # Install GITHUB, WGET, LSB_RELEASE, NMAP
 #
-yum clean all
-yum -y update
+sudo yum clean all
+sudo yum -y update
 yum -y install git wget redhat-lsb-core nmap yum-utils lsof epel-release
+
+#                        CONFIGURATION DOWNLOADS
+# ---------------------------------------------------------------------
+
+cd ~/
+git clone https://github.com/dbarr914/CCDC.git
+
 #
 #                         SPLUNK INDEXER INSTALL
 # ---------------------------------------------------------------------
@@ -153,7 +160,6 @@ mitigate_privs(){
  echo
 }
 
-
 splunk_check(){
  if [[ -f /opt/splunk/bin/splunk ]]
          then
@@ -172,15 +178,18 @@ splunk_check(){
  fi
 }
 
+#                           EDIT SPLUNK INPUTS 
+# ---------------------------------------------------------------------
 edit_inputs(){
  echo "[*] Editing Splunk's input file....
 
  cd /opt/splunk/etc/system/local
 
- echo -e "[monitor:///var/log/osquery/osqueryd.results.log]\nindex = osquery\nsourcetype = osquery_results\n\n[monitor:///var/log/osquery/osqueryd.*INFO*]\nindex = main\nsourcetype = osquery_info\n\n" >> inputs.conf
+ echo -e "[monitor:///var/log/osquery/osqueryd.results.log]\nindex = osquery\nsourcetype = osquery_results\n\n" >> inputs.conf
  echo -e "[monitor:///var/log/osquery/osqueryd.*ERROR*]\nindex = osquery\nsourcetype = osquery_error\n\n" >> inputs.conf
  echo -e "[monitor:///var/log/osquery/osqueryd.*WARNING*]\nindex = osquery\nsourcetype = osquery_warning\n\n" >> inputs.conf
-
+ echo -e "[monitor:///var/log/osquery/osqueryd.snapshot.log\nindex = osquery\nsourcetype = osquery_snapshot\n\n" >> inputs.conf
+ 
  echo "[*] Complete."
  echo "[*] Adding directories to monitor" 
  cd /opt/splunk/bin/
@@ -196,6 +205,42 @@ edit_inputs(){
  echo
 }
  
+
+#                          OSQUERY INSTALL
+# ---------------------------------------------------------------------
+
+download_osquery(){
+ cd /tmp
+ echo
+ echo "\e[93m[*] Downloading Osquery Agent.....\e[0m"
+ wget https://pkg.osquery.io/rpm/osquery-4.1.1-1.linux.x86_64.rpm
+ echo
+ echo "\e[93m[*] Osquery Agent Downloaded.\e[0m"
+ echo
+ }
+
+install_osquery(){
+ echo "\e[93m[*] Installing Osquery User Agent.....\e[0m"
+ sudo rpm -i osquery-4.1.1-1.linux.x86_64.rpm
+ echo
+ echo "\e[93m[*] Osquery Agent Installed.\e[0m"
+ rm -f /tmp/osquery-4.1.1-1.linux.x86_64.rpm
+}
+
+
+
+#                    MOVE CONFIGS TO CORRECT LOCATIONS
+# ---------------------------------------------------------------------
+config_osquery(){
+ cp ~/Documents/CCDC-master/osquery/1.Linux/osquery.conf /etc/osquery/osquery.conf
+ cp ~/Documents/CCDC-master/osquery/1.Linux/osquery.flags /etc/osquery/osquery.flags
+ cp -rf ~/Documents/CCDC-master/osquery/1.Linux/packs/ /etc/osquery/packs
+ cp -rf ~/Documents/CCDC-master/osquery/1.Linux/packs/ /usr/share/osquery/packs
+
+ osqueryctl config-check
+ osqueryctl start
+}
+
 disable_hugh_pages 
 increase_ulimit
 download_splunk
@@ -207,29 +252,8 @@ adjust_inputs
 mitigate_privs
 splunk_check
 
-#                           EDIT SPLUNK INPUTS 
-# ---------------------------------------------------------------------
 edit_inputs
 
-#                            OSQUERY INSTALL
-# ---------------------------------------------------------------------
-cd /tmp
-wget https://pkg.osquery.io/rpm/osquery-4.1.1-1.linux.x86_64.rpm
-rpm -i osquery-4.1.1-1.linux.x86_64.rpm
-
-#                        CONFIGURATION DOWNLOADS
-# ---------------------------------------------------------------------
-
-cd ~/
-git clone https://github.com/dbarr914/CCDC.git
-
-
-#                    MOVE CONFIGS TO CORRECT LOCATIONS
-# ---------------------------------------------------------------------
-
-cp ~/CCDC-master/osquery/1.Linux/osquery.conf /etc/osquery/osquery.conf
-cp -r ~/CCDC-master/osquery/packs/ /etc/osquery/packs/
-
-
-
-
+download_osquery
+install_osquery
+config_osquery
