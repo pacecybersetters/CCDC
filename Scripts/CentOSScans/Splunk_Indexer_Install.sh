@@ -202,6 +202,10 @@ edit_inputs(){
 
  # sudo ./splunk add monitor /var/log
  # sudo ./splunk add monitor /etc/
+ 
+ echo "[*] Complete."
+ echo "[*] Adding indexes..." 
+ 
 sudo ./splunk add index osquery
 sudo ./splunk add index threathunting
 sudo ./splunk add index windows
