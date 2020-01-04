@@ -15,8 +15,13 @@ Setup scripts should be run based on the host's operating system.
 
 For Testing:
 
-Make executable with chmod 644 <Script Name>
-Excute from a terminal with: ./<Script Name>
+Make executable with: 
+			
+			sudo chmod 644 [Script Name]
+	
+Excute from a terminal with:
+
+			./[Script Name]
 	
 # Nmap Scans
 
