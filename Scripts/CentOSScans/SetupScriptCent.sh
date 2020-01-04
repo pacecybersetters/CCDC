@@ -97,12 +97,12 @@ install_osquery
 #                    MOVE CONFIGS TO CORRECT LOCATIONS
 # ---------------------------------------------------------------------
 config_osquery(){
- cp ~/Documents/CCDC-master/osquery/1.Linux/osquery.conf /etc/osquery/osquery.conf
- cp ~/Documents/CCDC-master/osquery/1.Linux/osquery.flags /etc/osquery/osquery.flags
- cp -rf ~/Documents/CCDC-master/osquery/1.Linux/packs/ /etc/osquery/packs
- cp -rf ~/Documents/CCDC-master/osquery/1.Linux/packs/ /usr/share/osquery/packs
- osqueryctl config-check
- osqueryctl start
+ sudo cp ~/Documents/CCDC-master/osquery/1.Linux/osquery.conf /etc/osquery/osquery.conf
+ sudo cp ~/Documents/CCDC-master/osquery/1.Linux/osquery.flags /etc/osquery/osquery.flags
+ sudo cp -rf ~/Documents/CCDC-master/osquery/1.Linux/packs/ /etc/osquery/packs
+ sudo cp -rf ~/Documents/CCDC-master/osquery/1.Linux/packs/ /usr/share/osquery/packs
+ sudo osqueryctl config-check
+ sudo osqueryctl start
 }
 
 config_osquery
