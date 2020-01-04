@@ -247,10 +247,10 @@ install_osquery(){
 # ---------------------------------------------------------------------
 
 config_osquery(){
- cp ~/Documents/CCDC-master/osquery/1.Linux/osquery.conf /etc/osquery/osquery.conf
- cp ~/Documents/CCDC-master/osquery/1.Linux/osquery.flags /etc/osquery/osquery.flags
- cp -rf ~/Documents/CCDC-master/osquery/1.Linux/packs/ /etc/osquery/packs
- cp -rf ~/Documents/CCDC-master/osquery/1.Linux/packs/ /usr/share/osquery/packs
+ cp ~/Documents/CCDC/osquery/1.Linux/osquery.conf /etc/osquery/osquery.conf
+ cp ~/Documents/CCDC/osquery/1.Linux/osquery.flags /etc/osquery/osquery.flags
+ cp -rf ~/Documents/CCDC/osquery/1.Linux/packs/ /etc/osquery/packs/
+ cp -rf ~/Documents/CCDC/osquery/1.Linux/packs/ /usr/share/osquery/packs/
 
  osqueryctl config-check
  osqueryctl start
