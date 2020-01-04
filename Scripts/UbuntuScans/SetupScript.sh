@@ -36,8 +36,8 @@ sudo apt-get install -y lsof nmap clamav debsums fail2ban git
 #                         CONFIG DOWNLOADS
 # ---------------------------------------------------------------------
 
-cd ~/Documents
-git clone https://github.com/dbarr914/CCDC.git
+# cd ~/Documents
+# git clone https://github.com/dbarr914/CCDC.git
 
 #                           LYNIS INSTALL
 # ---------------------------------------------------------------------
