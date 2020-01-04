@@ -259,7 +259,7 @@ disable_hugh_pages
 increase_ulimit
 download_splunk
 install_splunk
-#add_user
+add_user
 # enable_ssl
 firewall_rules
 adjust_inputs
