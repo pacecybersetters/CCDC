@@ -36,8 +36,8 @@ sudo yum -y install git wget redhat-lsb-core nmap yum-utils lsof epel-release
 #                         CONFIG DOWNLOADS
 # ---------------------------------------------------------------------
 
-cd ~/Documents
-git clone https://github.com/dbarr914/CCDC.git
+# cd ~/Documents
+# git clone https://github.com/dbarr914/CCDC.git
 
 #                           SPLUNK FORWARDER INSTALL
 # ---------------------------------------------------------------------
