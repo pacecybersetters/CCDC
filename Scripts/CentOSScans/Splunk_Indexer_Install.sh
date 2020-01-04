@@ -34,11 +34,11 @@ sudo yum -y update
 
 sudo yum -y install git wget redhat-lsb-core nmap yum-utils lsof epel-release
 
-#                        CONFIGURATION DOWNLOADS
+#                         CONFIG DOWNLOADS
 # ---------------------------------------------------------------------
 
-cd ~/
-git clone https://github.com/dbarr914/CCDC.git
+# cd ~/Documents
+# git clone https://github.com/dbarr914/CCDC.git
 
 #
 #                         SPLUNK INDEXER INSTALL
