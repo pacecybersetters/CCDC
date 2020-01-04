@@ -17,22 +17,27 @@
 # Defense Competition. This tool-set represents a larger overall strategy
 # and should be tailored to your specific team.
 
-#                           VARIABLES
+#                            VARIABLES
 # ---------------------------------------------------------------------
 
 read -p "\e[93m What is the IP Address of the Splunk Indexer? \e[0m" indexerip
 
-#                           INITIAL UPDATE
+#                         INITIAL UPDATE
 # ---------------------------------------------------------------------
 
 sudo apt-get update
 sudo apt-get -y upgrade
 
-#                           APT PACKAGES INSTALL
+#                       APT PACKAGES INSTALL
 # ---------------------------------------------------------------------
 
-sudo apt-get install -y lsof nmap clamav debsums fail2ban 
+sudo apt-get install -y lsof nmap clamav debsums fail2ban git
 
+#                         CONFIG DOWNLOADS
+# ---------------------------------------------------------------------
+
+cd ~/Documents
+git clone https://github.com/dbarr914/CCDC.git
 
 #                           LYNIS INSTALL
 # ---------------------------------------------------------------------
@@ -79,3 +84,47 @@ sudo ./splunk enable boot-start
 sudo ./splunk add forward-server "$indexerip":9997
 sudo ./splunk restart
 
+#                          OSQUERY INSTALL
+# ---------------------------------------------------------------------
+
+download_osquery(){
+ cd /tmp
+ echo
+ echo "\e[93m[*] Downloading Osquery Agent.....\e[0m"
+ wget https://pkg.osquery.io/deb/osquery_4.0.2_1.linux.amd64.deb
+ echo
+ echo "\e[93m[*] Osquery Agent Downloaded.\e[0m"
+ echo
+ }
+
+install_osquery(){
+ echo "\e[93m[*] Installing Osquery User Agent.....\e[0m"
+ sudo dpkg -i osquery_4.0.2_1.linux.amd64.deb
+ echo
+ echo "\e[93m[*] Osquery Agent Installed.\e[0m"
+ rm -f /tmp/osquery_4.0.2_1.linux.amd64.deb
+}
+
+download_osquery
+install_osquery
+
+cp ~/Documents/CCDC-master/osquery/1.Linux/osquery.conf /etc/osquery/osquery.conf
+cp ~/Documents/CCDC-master/osquery/1.Linux/osquery.flags /etc/osquery/osquery.flags
+cp -rf ~/Documents/CCDC-master/osquery/1.Linux/packs/ /etc/osquery/packs
+cp -rf ~/Documents/CCDC-master/osquery/1.Linux/packs/ /usr/share/osquery/packs
+
+osqueryctl config-check
+osqueryctl start
+
+
+#                         CONFIGURING INPUTS.CONF
+# ---------------------------------------------------------------------
+
+cd /opt/splunkforwarder/etc/system/local 
+echo -e "[monitor:///var/log/osquery/osqueryd.results.log]\nindex = osquery\nsourcetype = osquery_results\n\n" >> inputs.conf
+
+echo -e "[monitor:///var/log/osquery/osqueryd.*ERROR*]\nindex = osquery\nsourcetype = osquery_error\n\n" >> inputs.conf
+
+echo -e "[monitor:///var/log/osquery/osqueryd.*WARNING*]\nindex = osquery\nsourcetype = osquery_warning\n\n" >> inputs.conf
+
+echo -e "[monitor:///var/log/osquery/osqueryd.snapshot.log\nindex = osquery\nsourcetype = osquery_snapshot\n\n" >> inputs.conf
