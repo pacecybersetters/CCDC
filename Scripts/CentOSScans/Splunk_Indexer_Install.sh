@@ -25,15 +25,20 @@
 # ---------------------------------------------------------------------
 #
 # Install GITHUB, WGET, LSB_RELEASE, NMAP
-
+echo "Updating System..."
+echo
 sudo yum clean all > /dev/null 2>&1
 sudo yum -y update > /dev/null 2>&1
-
+echo "[*] Complete."
+echo
 #                         YUM PACKAGES INSTALL
 # ---------------------------------------------------------------------
-
+echo "Installing Dependencies..."
+echo
 sudo yum -y install git wget redhat-lsb-core nmap yum-utils lsof epel-release > /dev/null 2>&1
-
+echo
+echo "[*] Complete."
+echo
 #                         CONFIG DOWNLOADS
 # ---------------------------------------------------------------------
 
@@ -119,12 +124,32 @@ firewall_rules(){
  echo "[*] Opening Splunk firewall ports....."
  echo
  afz=`firewall-cmd --get-active-zone | head -1`
+ echo "[*] Opening port 8000..."
+ echo
  firewall-cmd --zone=$afz --add-port=8000/tcp --permanent
+ echo
+ echo "[*] Opening port 8065..."
+ echo
  firewall-cmd --zone=$afz --add-port=8065/tcp --permanent
+ echo
+ echo "[*] Opening port 8089..."
+ echo
  firewall-cmd --zone=$afz --add-port=8089/tcp --permanent
+ echo
+ echo "[*] Opening port 8191..."
+ echo
  firewall-cmd --zone=$afz --add-port=8191/tcp --permanent
+ echo
+ echo "[*] Opening port 9997..."
+ echo
  firewall-cmd --zone=$afz --add-port=9997/tcp --permanent
+ echo
+ echo "[*] Opening port 8080..."
+ echo
  firewall-cmd --zone=$afz --add-port=8080/tcp --permanent
+ echo
+ echo "[*] Reloading Firewall..."
+ echo
  firewall-cmd --reload
  echo
  echo "[*] Firewall ports opened."
@@ -148,10 +173,10 @@ adjust_inputs(){
 mitigate_privs(){
  chown splunk:splunk /opt/splunk/etc/system/local/inputs.conf
  echo
- echo "[*] Running test start....."
+ echo "[*] Running initial start....."
  echo
- /opt/splunk/bin/splunk start --accept-license'
- /opt/splunk/bin/splunk stop'
+ /opt/splunk/bin/splunk start --accept-license
+ /opt/splunk/bin/splunk stop /dev/null 2>&1
  echo
  echo "[*] Complete."
  echo
@@ -166,6 +191,7 @@ mitigate_privs(){
  chown root:splunk /opt/splunk/etc/splunk-launch.conf
  chmod 644 /opt/splunk/etc/splunk-launch.conf
  echo "[*] Complete."
+ echo
  /opt/splunk/bin/splunk start
  echo
  echo
@@ -244,7 +270,7 @@ install_osquery(){
  echo
  sudo rpm -i osquery-4.1.1-1.linux.x86_64.rpm
  echo
- echo "\e[93m[*] Osquery Agent Installed.\e[0m"
+ echo "[*] Osquery Agent Installed."
  echo
  rm -f /tmp/osquery-4.1.1-1.linux.x86_64.rpm
 }
