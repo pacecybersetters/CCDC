@@ -233,10 +233,10 @@ edit_inputs(){
  echo
  echo "[*] Adding indexes..." 
  echo
- sudo ./splunk add index osquery
- sudo ./splunk add index threathunting
- sudo ./splunk add index windows
- sudo ./splunk add index bro
+ ./splunk add index osquery
+ ./splunk add index threathunting
+ ./splunk add index windows
+ ./splunk add index bro
  echo
  echo "[*] Complete."
  echo
