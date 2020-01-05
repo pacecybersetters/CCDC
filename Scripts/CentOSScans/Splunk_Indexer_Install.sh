@@ -147,20 +147,22 @@ mitigate_privs(){
  chown splunk:splunk /opt/splunk/etc/system/local/inputs.conf
  echo
  echo "[*] Enabling Splunk to start at boot....."
+ echo
  /opt/splunk/bin/splunk enable boot-start -user splunk
  echo "[*] Complete."
  echo
  echo "[*] Running test start....."
+ echo
  runuser -l splunk -c '/opt/splunk/bin/splunk start --accept-license'
  runuser -l splunk -c '/opt/splunk/bin/splunk stop'
  echo "[*] Complete."
  echo
- echo
  echo "[*] Adjusting splunk-launch.conf to mitigate privilege escalation attack....."
+ echo
  chown root:splunk /opt/splunk/etc/splunk-launch.conf
  chmod 644 /opt/splunk/etc/splunk-launch.conf
  echo "[*] Complete."
- runuser -l splunk -c '/opt/splunk/bin/splunk start'
+ /opt/splunk/bin/splunk start
  echo
  echo
 }
@@ -204,12 +206,12 @@ edit_inputs(){
  
  echo "[*] Complete."
  echo "[*] Adding indexes..." 
- 
-sudo ./splunk add index osquery
-sudo ./splunk add index threathunting
-sudo ./splunk add index windows
-sudo ./splunk add index bro
-
+ echo
+ sudo ./splunk add index osquery
+ sudo ./splunk add index threathunting
+ sudo ./splunk add index windows
+ sudo ./splunk add index bro
+ echo
  echo "[*] Complete."
  echo
  echo "[*] Restarting Splunk..."
@@ -246,10 +248,10 @@ install_osquery(){
 # ---------------------------------------------------------------------
 
 config_osquery(){
- cp ./Documents/CCDC/osquery/1.Linux/osquery.conf /etc/osquery/osquery.conf
- cp ./Documents/CCDC/osquery/1.Linux/osquery.flags /etc/osquery/osquery.flags
- cp -rf ./Documents/CCDC/osquery/1.Linux/packs/ /etc/osquery/packs/
- cp -rf ./Documents/CCDC/osquery/1.Linux/packs/ /usr/share/osquery/packs/
+ cp Documents/CCDC/osquery/1.Linux/osquery.conf /etc/osquery/osquery.conf
+ cp Documents/CCDC/osquery/1.Linux/osquery.flags /etc/osquery/osquery.flags
+ cp -rf Documents/CCDC/osquery/1.Linux/packs/ /etc/osquery/packs/
+ cp -rf Documents/CCDC/osquery/1.Linux/packs/ /usr/share/osquery/packs/
 
  osqueryctl config-check
  osqueryctl start
