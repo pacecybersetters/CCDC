@@ -116,6 +116,23 @@ add_user(){
  echo "[*] Splunk User Created."
  echo
 } 
+
+initial_run(){
+ echo
+ echo "[*] Running initial start....."
+ echo
+ /opt/splunk/bin/splunk start --accept-license
+ /opt/splunk/bin/splunk stop /dev/null 2>&1
+ echo
+ echo "[*] Complete."
+ echo
+ echo "[*] Enabling Splunk to start at boot....."
+ echo
+ /opt/splunk/bin/splunk enable boot-start -user splunk
+ echo
+ echo "[*] Complete."
+ echo
+}
  
 enable_ssl(){ 
  echo "[*] Enabling SSL....."
@@ -179,20 +196,6 @@ adjust_inputs(){
 
 mitigate_privs(){
  chown -R splunk:splunk /opt/splunk
- echo
- echo "[*] Running initial start....."
- echo
- /opt/splunk/bin/splunk start --accept-license
- /opt/splunk/bin/splunk stop /dev/null 2>&1
- echo
- echo "[*] Complete."
- echo
- echo "[*] Enabling Splunk to start at boot....."
- echo
- /opt/splunk/bin/splunk enable boot-start -user splunk
- echo
- echo "[*] Complete."
- echo
  echo "[*] Adjusting splunk-launch.conf to mitigate privilege escalation attack....."
  echo
  chown root:splunk /opt/splunk/etc/splunk-launch.conf
@@ -312,14 +315,16 @@ install_splunk
 sleep 1
 add_user
 sleep 1
+initial_run
+sleep 1
+splunk_check
 # enable_ssl
+sleep 1
 firewall_rules
 sleep 1
 adjust_inputs
 sleep 1
 mitigate_privs
-sleep 1
-splunk_check
 sleep 1
 edit_inputs
 sleep 1
