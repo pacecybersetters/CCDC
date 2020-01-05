@@ -25,13 +25,13 @@
 # ---------------------------------------------------------------------
 #
 # Install GITHUB, WGET, LSB_RELEASE, NMAP
-echo -e "\e[97mDate Run: $(date)"
+echo -e "\e[92mDate Run: $(date)"
 echo
 echo -e "This script will install OSQUERY 4.1.1 endpoint visibility agent,"
 echo -e "and SPLUNK INDEXER and other dependencies. In addition it will download" 
 echo -e "the predetermined configuration files.\e[0m "
 echo
-echo -e "\e[93mUpdating System..."
+echo -e "\e[95mUpdating System..."
 echo -e "This may take some time..."
 sudo yum clean all > /dev/null 2>&1
 echo "..................."
@@ -92,7 +92,7 @@ increase_ulimit(){
 download_splunk(){
  cd /tmp
  echo
- echo "[*] Downloading Splunk....."
+ echo  "[*] Downloading Splunk....."
  wget -O splunk-8.tgz 'https://www.splunk.com/bin/splunk/DownloadActivityServlet?architecture=x86_64&platform=linux&version=8.0.1&product=splunk&filename=splunk-8.0.1-6db836e2fb9e-Linux-x86_64.tgz&wget=true'
  echo
  echo "[*] Splunk Downloaded."
@@ -128,7 +128,7 @@ enable_ssl(){
 }
 
 firewall_rules(){
- echo "[*] Opening Splunk firewall ports....."
+ echo -e "\e[92m[*] Opening Splunk firewall ports....."
  echo
  afz=`firewall-cmd --get-active-zone | head -1`
  echo "[*] Opening port 8000..."
@@ -159,7 +159,7 @@ firewall_rules(){
  echo
  firewall-cmd --reload
  echo
- echo "[*] Firewall ports opened."
+ echo -e "[*] Firewall ports opened.\e[0m"
  echo
 }
 
@@ -214,7 +214,7 @@ splunk_check(){
                  echo "                        HAPPY SPLUNKING!!!"
                  echo
          else
-                 echo -e "\e[91mSplunk Enterprise has FAILED install!\e[0m"
+                 echo -e "\e[91m[!]Splunk Enterprise has FAILED install!\e[0m"
  fi
 }
 
@@ -266,7 +266,7 @@ edit_inputs(){
 download_osquery(){
  cd /tmp
  echo
- echo "[*] Downloading Osquery Agent......"
+ echo -e "\e[95m[*] Downloading Osquery Agent......"
  echo
  wget https://pkg.osquery.io/rpm/osquery-4.1.1-1.linux.x86_64.rpm
  echo
@@ -279,7 +279,7 @@ install_osquery(){
  echo
  sudo rpm -i osquery-4.1.1-1.linux.x86_64.rpm > /dev/null 2>&1
  echo
- echo "[*] Osquery Agent Installed."
+ echo "[*] Osquery Agent Installed.\e[0m"
  echo
  rm -f /tmp/osquery-4.1.1-1.linux.x86_64.rpm
 }
