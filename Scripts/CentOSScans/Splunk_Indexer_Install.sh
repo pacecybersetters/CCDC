@@ -186,12 +186,12 @@ mitigate_privs(){
  echo
  echo "[*] Complete."
  echo
- echo "[*] Adjusting splunk-launch.conf to mitigate privilege escalation attack....."
- echo
- chown root:splunk /opt/splunk/etc/splunk-launch.conf
- chmod 644 /opt/splunk/etc/splunk-launch.conf
- echo "[*] Complete."
- echo
+ # echo "[*] Adjusting splunk-launch.conf to mitigate privilege escalation attack....."
+ # echo
+ # chown root:splunk /opt/splunk/etc/splunk-launch.conf
+ # chmod 644 /opt/splunk/etc/splunk-launch.conf
+ # echo "[*] Complete."
+ # echo
  /opt/splunk/bin/splunk start
  echo
  echo
@@ -303,7 +303,7 @@ add_user
 # enable_ssl
 firewall_rules
 adjust_inputs
-mitigate_privs
+#mitigate_privs
 splunk_check
 
 edit_inputs
