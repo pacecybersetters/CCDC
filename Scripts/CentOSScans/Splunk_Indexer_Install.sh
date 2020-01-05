@@ -1,6 +1,6 @@
 #!/bin/bash
 # Bash install script for Pace CCDC Team CentOS Splunk Indexer
-# Version 1.1.5
+# Version 1.2.5
 # Written by Daniel Barr
 # 
 # ---------------------------------------------------------------------
