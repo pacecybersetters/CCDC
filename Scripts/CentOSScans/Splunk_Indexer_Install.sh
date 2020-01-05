@@ -26,13 +26,13 @@
 #
 # Install GITHUB, WGET, LSB_RELEASE, NMAP
 
-sudo yum clean all > /dev/null 2>
-sudo yum -y update > /dev/null 2>
+sudo yum clean all > /dev/null 2>&1
+sudo yum -y update > /dev/null 2>&1
 
 #                         YUM PACKAGES INSTALL
 # ---------------------------------------------------------------------
 
-sudo yum -y install git wget redhat-lsb-core nmap yum-utils lsof epel-release > /dev/null 2>
+sudo yum -y install git wget redhat-lsb-core nmap yum-utils lsof epel-release > /dev/null 2>&1
 
 #                         CONFIG DOWNLOADS
 # ---------------------------------------------------------------------
@@ -89,7 +89,7 @@ download_splunk(){
 
 install_splunk(){
  echo "[*] Installing Splunk....."
- tar -xzvf /tmp/splunk-8.tgz -C /opt > /dev/null 2>
+ tar -xzvf /tmp/splunk-8.tgz -C /opt > /dev/null 2>&1
  echo
  echo "[*] Splunk Enterprise Installed."
  echo
@@ -217,8 +217,9 @@ edit_inputs(){
  echo
  echo "[*] Restarting Splunk..."
  echo
- sudo ./splunk restart 
+ sudo ./splunk restart > /dev/null 2>&1
  echo
+ sudo ./splunk status
  echo "[*] Complete."
  echo
 }
