@@ -171,7 +171,7 @@ adjust_inputs(){
 }
 
 mitigate_privs(){
- chown splunk:splunk /opt/splunk/etc/system/local/inputs.conf
+ chown -R splunk:splunk /opt/splunk
  echo
  echo "[*] Running initial start....."
  echo
@@ -186,12 +186,12 @@ mitigate_privs(){
  echo
  echo "[*] Complete."
  echo
- # echo "[*] Adjusting splunk-launch.conf to mitigate privilege escalation attack....."
- # echo
- # chown root:splunk /opt/splunk/etc/splunk-launch.conf
- # chmod 644 /opt/splunk/etc/splunk-launch.conf
- # echo "[*] Complete."
- # echo
+ echo "[*] Adjusting splunk-launch.conf to mitigate privilege escalation attack....."
+ echo
+ chown root:splunk /opt/splunk/etc/splunk-launch.conf
+ chmod 644 /opt/splunk/etc/splunk-launch.conf
+ echo "[*] Complete."
+ echo
  /opt/splunk/bin/splunk start
  echo
  echo
