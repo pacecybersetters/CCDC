@@ -1,6 +1,6 @@
 #!/bin/bash
 # Bash install script for Pace CCDC Team CentOS Splunk Indexer
-# Version 1.0.9
+# Version 1.1.5
 # Written by Daniel Barr
 # 
 # ---------------------------------------------------------------------
@@ -25,9 +25,16 @@
 # ---------------------------------------------------------------------
 #
 # Install GITHUB, WGET, LSB_RELEASE, NMAP
-echo "Updating System..."
+echo -e "\e[97mDate Run: $(date)"
 echo
+echo -e "This script will install OSQUERY 4.1.1 endpoint visibility agent,"
+echo -e "and SPLUNK INDEXER and other dependencies. In addition it will download" 
+echo -e "the predetermined configuration files.\e[0m "
+echo
+echo -e "\e[93mUpdating System..."
+echo -e "This may take some time..."
 sudo yum clean all > /dev/null 2>&1
+echo "..................."
 sudo yum -y update > /dev/null 2>&1
 echo "[*] Complete."
 echo
@@ -37,7 +44,7 @@ echo "Installing Dependencies..."
 echo
 sudo yum -y install git wget redhat-lsb-core nmap yum-utils lsof epel-release > /dev/null 2>&1
 echo
-echo "[*] Complete."
+echo -e "[*] Complete.\e[0m"
 echo
 #                         CONFIG DOWNLOADS
 # ---------------------------------------------------------------------
@@ -207,7 +214,7 @@ splunk_check(){
                  echo "                        HAPPY SPLUNKING!!!"
                  echo
          else
-                 echo "Splunk Enterprise has FAILED install!"
+                 echo -e "\e[91mSplunk Enterprise has FAILED install!\e[0m"
  fi
 }
 
@@ -296,17 +303,28 @@ config_osquery(){
 }
 
 disable_hugh_pages 
+sleep 1
 increase_ulimit
+sleep 1
 download_splunk
+sleep 1
 install_splunk
+sleep 1
 add_user
+sleep 1
 # enable_ssl
 firewall_rules
+sleep 1
 adjust_inputs
+sleep 1
 mitigate_privs
+sleep 1
 splunk_check
-
+sleep 1
 edit_inputs
+sleep 1
 download_osquery
+sleep 1
 install_osquery
+sleep 1
 config_osquery
