@@ -286,10 +286,10 @@ config_osquery(){
 
  read -p "What is the user's home directory where the git repo is stored? " userhome
 
- cp "/home/$userhome/Documents/CCDC/osquery/1.Linux/osquery.conf /etc/osquery/osquery.conf"
- cp "/home/$userhome/Documents/CCDC/osquery/1.Linux/osquery.flags /etc/osquery/osquery.flags"
- cp -rf "/home/$userhome/Documents/CCDC/osquery/1.Linux/packs/ /etc/osquery/packs/"
- cp -rf "/home/$userhome/Documents/CCDC/osquery/1.Linux/packs/ /usr/share/osquery/packs/"
+ cp "/home/$userhome/Documents/CCDC/osquery/1.Linux/osquery.conf" /etc/osquery/osquery.conf
+ cp "/home/$userhome/Documents/CCDC/osquery/1.Linux/osquery.flags" /etc/osquery/osquery.flags
+ cp -rf "/home/$userhome/Documents/CCDC/osquery/1.Linux/packs/" /etc/osquery/packs/
+ cp -rf "/home/$userhome/Documents/CCDC/osquery/1.Linux/packs/" /usr/share/osquery/packs/
 
  osqueryctl config-check
  osqueryctl start
@@ -303,11 +303,10 @@ add_user
 # enable_ssl
 firewall_rules
 adjust_inputs
-#mitigate_privs
+mitigate_privs
 splunk_check
 
 edit_inputs
-
 download_osquery
 install_osquery
 config_osquery
