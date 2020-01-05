@@ -26,13 +26,13 @@
 #
 # Install GITHUB, WGET, LSB_RELEASE, NMAP
 
-sudo yum clean all
-sudo yum -y update
+sudo yum clean all > /dev/null 2>
+sudo yum -y update > /dev/null 2>
 
 #                         YUM PACKAGES INSTALL
 # ---------------------------------------------------------------------
 
-sudo yum -y install git wget redhat-lsb-core nmap yum-utils lsof epel-release
+sudo yum -y install git wget redhat-lsb-core nmap yum-utils lsof epel-release > /dev/null 2>
 
 #                         CONFIG DOWNLOADS
 # ---------------------------------------------------------------------
@@ -89,9 +89,10 @@ download_splunk(){
 
 install_splunk(){
  echo "[*] Installing Splunk....."
- tar -xzvf /tmp/splunk-8.tgz -C /opt
+ tar -xzvf /tmp/splunk-8.tgz -C /opt > /dev/null 2>
  echo
- echo "\e[93m[*] Splunk Enterprise Installed.\e[0m"
+ echo "[*] Splunk Enterprise Installed."
+ echo
  rm -f /tmp/splunk-8.tgz
 }
 
@@ -141,20 +142,23 @@ adjust_inputs(){
  echo "" >> /opt/splunk/etc/system/local/inputs.conf
  echo
  echo "[*] Enabled Splunk TCP input over 9997."
+ echo
 }
 
 mitigate_privs(){
  chown splunk:splunk /opt/splunk/etc/system/local/inputs.conf
  echo
+ echo "[*] Running test start....."
+ echo
+ /opt/splunk/bin/splunk start --accept-license'
+ /opt/splunk/bin/splunk stop'
+ echo
+ echo "[*] Complete."
+ echo
  echo "[*] Enabling Splunk to start at boot....."
  echo
  /opt/splunk/bin/splunk enable boot-start -user splunk
- echo "[*] Complete."
  echo
- echo "[*] Running test start....."
- echo
- runuser -l splunk -c '/opt/splunk/bin/splunk start --accept-license'
- runuser -l splunk -c '/opt/splunk/bin/splunk stop'
  echo "[*] Complete."
  echo
  echo "[*] Adjusting splunk-launch.conf to mitigate privilege escalation attack....."
@@ -170,14 +174,11 @@ mitigate_privs(){
 splunk_check(){
  if [[ -f /opt/splunk/bin/splunk ]]
          then
-                 echo "Splunk Enterprise $(cat /opt/splunk/etc/splunk.version | head -1)"
-                 echo "has been installed, configured, and started!"
+                 echo "Splunk Enterprise $(cat /opt/splunk/etc/splunk.version | head -1) has been installed, configured, and started!"
+                 echo
                  echo "Visit the Splunk server using https://hostNameORip:8000 as mentioned above."
                  echo
-                 echo
                  echo "                        HAPPY SPLUNKING!!!"
-                 echo
-                 echo
                  echo
          else
                  echo "Splunk Enterprise has FAILED install!"
@@ -215,7 +216,9 @@ edit_inputs(){
  echo "[*] Complete."
  echo
  echo "[*] Restarting Splunk..."
- sudo ./splunk restart
+ echo
+ sudo ./splunk restart 
+ echo
  echo "[*] Complete."
  echo
 }
@@ -227,18 +230,21 @@ edit_inputs(){
 download_osquery(){
  cd /tmp
  echo
- echo "\e[93m[*] Downloading Osquery Agent.....\e[0m"
+ echo "[*] Downloading Osquery Agent......"
+ echo
  wget https://pkg.osquery.io/rpm/osquery-4.1.1-1.linux.x86_64.rpm
  echo
- echo "\e[93m[*] Osquery Agent Downloaded.\e[0m"
+ echo "[*] Osquery Agent Downloaded."
  echo
  }
 
 install_osquery(){
  echo "\e[93m[*] Installing Osquery User Agent.....\e[0m"
+ echo
  sudo rpm -i osquery-4.1.1-1.linux.x86_64.rpm
  echo
  echo "\e[93m[*] Osquery Agent Installed.\e[0m"
+ echo
  rm -f /tmp/osquery-4.1.1-1.linux.x86_64.rpm
 }
 
