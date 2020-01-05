@@ -226,12 +226,14 @@ edit_inputs(){
  
  echo "[*] Complete."
  echo "[*] Adding directories to monitor..." 
+ echo
  cd /opt/splunk/bin/
 
  # sudo ./splunk add monitor /var/log
  # sudo ./splunk add monitor /etc/
  
  echo "[*] Complete."
+ echo
  echo "[*] Adding indexes..." 
  echo
  sudo ./splunk add index osquery
@@ -266,9 +268,9 @@ download_osquery(){
  }
 
 install_osquery(){
- echo "\e[93m[*] Installing Osquery User Agent.....\e[0m"
+ echo "[*] Installing Osquery User Agent....."
  echo
- sudo rpm -i osquery-4.1.1-1.linux.x86_64.rpm
+ sudo rpm -i osquery-4.1.1-1.linux.x86_64.rpm > /dev/null 2>&1
  echo
  echo "[*] Osquery Agent Installed."
  echo
@@ -281,10 +283,13 @@ install_osquery(){
 # ---------------------------------------------------------------------
 
 config_osquery(){
- cp Documents/CCDC/osquery/1.Linux/osquery.conf /etc/osquery/osquery.conf
- cp Documents/CCDC/osquery/1.Linux/osquery.flags /etc/osquery/osquery.flags
- cp -rf Documents/CCDC/osquery/1.Linux/packs/ /etc/osquery/packs/
- cp -rf Documents/CCDC/osquery/1.Linux/packs/ /usr/share/osquery/packs/
+
+ read -p "What is the user's home directory where the git repo is stored? " userhome
+
+ cp "/home/$userhome/Documents/CCDC/osquery/1.Linux/osquery.conf /etc/osquery/osquery.conf"
+ cp "/home/$userhome/Documents/CCDC/osquery/1.Linux/osquery.flags /etc/osquery/osquery.flags"
+ cp -rf "/home/$userhome/Documents/CCDC/osquery/1.Linux/packs/ /etc/osquery/packs/"
+ cp -rf "/home/$userhome/Documents/CCDC/osquery/1.Linux/packs/ /usr/share/osquery/packs/"
 
  osqueryctl config-check
  osqueryctl start
