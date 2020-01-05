@@ -194,19 +194,6 @@ adjust_inputs(){
  echo
 }
 
-mitigate_privs(){
- chown -R splunk:splunk /opt/splunk
- echo "[*] Adjusting splunk-launch.conf to mitigate privilege escalation attack....."
- echo
- chown root:splunk /opt/splunk/etc/splunk-launch.conf
- chmod 644 /opt/splunk/etc/splunk-launch.conf
- echo "[*] Complete."
- echo
- /opt/splunk/bin/splunk start
- echo
- echo
-}
-
 splunk_check(){
  if [[ -f /opt/splunk/bin/splunk ]]
          then
@@ -324,8 +311,8 @@ firewall_rules
 sleep 1
 adjust_inputs
 sleep 1
-mitigate_privs
-sleep 1
+#mitigate_privs
+#sleep 1
 edit_inputs
 sleep 1
 download_osquery
