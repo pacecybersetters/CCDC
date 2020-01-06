@@ -1,6 +1,6 @@
 #!/bin/bash
 # Bash Install script for Pace CCDC Team Linux Environment
-# Version 1.0.8
+# Version 1.2.5
 # Written by Daniel Barr
 # 
 # ---------------------------------------------------------------------
@@ -20,7 +20,7 @@
 #                            VARIABLES
 # ---------------------------------------------------------------------
 
-read -p "\e[93m What is the IP Address of the Splunk Indexer? \e[0m" indexerip
+read -p "What is the IP Address of the Splunk Indexer? " indexerip
 echo
 read -p "What is the user's home directory where the git repo is stored? " userhome
 echo
