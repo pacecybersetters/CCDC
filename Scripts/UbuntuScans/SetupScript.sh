@@ -37,9 +37,9 @@ echo -e "it will download the predetermined configuration files.\e[0m "
 echo
 echo -e "\e[95mUpdating System..."
 echo -e "This may take some time..."
-sudo apt-get update > /dev/null 2>&1
+sudo apt-get update | tee $(hostname)_install.file
 echo "..................."
-sudo apt-get -y upgrade > /dev/null 2>&1
+sudo apt-get -y upgrade | tee -a $(hostname)_install.file
 echo "[*] Complete."
 echo
 
@@ -48,7 +48,7 @@ echo
 
 echo "Installing Dependencies..."
 echo
-sudo apt-get install -y lsof nmap clamav debsums fail2ban git > /dev/null 2>&1
+sudo apt-get install -y lsof nmap clamav debsums fail2ban git | tee -a $(hostname)_install.file
 echo
 echo -e "[*] Complete.\e[0m"
 echo
@@ -108,7 +108,7 @@ initial_run(){
  echo "[*] Running initial start....."
  echo
  sudo /opt/splunkforwarder/bin/splunk start --accept-license
- sudo /opt/splunkforwarder/bin/splunk stop /dev/null 2>&1
+ sudo /opt/splunkforwarder/bin/splunk stop | tee -a $(hostname)_install.file
  echo
  echo "[*] Complete."
  echo
@@ -151,7 +151,7 @@ edit_inputs(){
  echo
  echo "[*] Restarting Splunk..."
  echo
- sudo ./splunk restart > /dev/null 2>&1
+ sudo ./splunk restart | tee -a $(hostname)_install.file
  echo
  sudo ./splunk status
  echo "[*] Complete."
