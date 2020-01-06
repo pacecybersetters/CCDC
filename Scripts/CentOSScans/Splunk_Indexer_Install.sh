@@ -33,16 +33,16 @@ echo -e "the predetermined configuration files.\e[0m "
 echo
 echo -e "\e[95mUpdating System..."
 echo -e "This may take some time..."
-sudo yum clean all > /dev/null 2>&1
+sudo yum clean all | tee $(hostname)_install.file
 echo "..................."
-sudo yum -y update > /dev/null 2>&1
+sudo yum -y update | tee -a $(hostname)_install.file
 echo "[*] Complete."
 echo
 #                         YUM PACKAGES INSTALL
 # ---------------------------------------------------------------------
 echo "Installing Dependencies..."
 echo
-sudo yum -y install git wget redhat-lsb-core nmap yum-utils lsof epel-release > /dev/null 2>&1
+sudo yum -y install git wget redhat-lsb-core nmap yum-utils lsof epel-release | tee -a $(hostname)_install.file
 echo
 echo -e "[*] Complete.\e[0m"
 echo
@@ -101,7 +101,7 @@ download_splunk(){
 
 install_splunk(){
  echo "[*] Installing Splunk....."
- tar -xzvf /tmp/splunk-8.tgz -C /opt > /dev/null 2>&1
+ tar -xzvf /tmp/splunk-8.tgz -C /opt | tee -a $(hostname)_install.file
  echo
  echo "[*] Splunk Enterprise Installed."
  echo
@@ -121,14 +121,14 @@ initial_run(){
  echo
  echo "[*] Running initial start....."
  echo
- /opt/splunk/bin/splunk start --accept-license
- /opt/splunk/bin/splunk stop /dev/null 2>&1
+ sudo /opt/splunk/bin/splunk start --accept-license
+ sudo /opt/splunk/bin/splunk stop | tee -a $(hostname)_install.file
  echo
  echo "[*] Complete."
  echo
  echo "[*] Enabling Splunk to start at boot....."
  echo
- /opt/splunk/bin/splunk enable boot-start
+ sudo /opt/splunk/bin/splunk enable boot-start
  echo
  echo "[*] Complete."
  echo
@@ -242,7 +242,7 @@ edit_inputs(){
  echo
  echo "[*] Restarting Splunk..."
  echo
- sudo ./splunk restart > /dev/null 2>&1
+ sudo ./splunk restart | tee -a $(hostname)_install.file
  echo
  sudo ./splunk status
  echo "[*] Complete."
@@ -265,11 +265,11 @@ download_osquery(){
  }
 
 install_osquery(){
- echo "[*] Installing Osquery User Agent....."
+ echo -e "[*] Installing Osquery User Agent....."
  echo
  sudo rpm -i osquery-4.1.1-1.linux.x86_64.rpm > /dev/null 2>&1
  echo
- echo "[*] Osquery Agent Installed.\e[0m"
+ echo -e "[*] Osquery Agent Installed.\e[0m"
  echo
  rm -f /tmp/osquery-4.1.1-1.linux.x86_64.rpm
 }
