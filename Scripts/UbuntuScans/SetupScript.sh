@@ -21,23 +21,43 @@
 # ---------------------------------------------------------------------
 
 read -p "\e[93m What is the IP Address of the Splunk Indexer? \e[0m" indexerip
-
+echo
+read -p "What is the user's home directory where the git repo is stored? " userhome
+echo
 #                         INITIAL UPDATE
 # ---------------------------------------------------------------------
+#
+# Install GIT, WGET, NMAP, Fail2Ban, etc. 
 
-sudo apt-get update
-sudo apt-get -y upgrade
+echo -e "\e[92mDate Run: $(date)"
+echo
+echo -e "This script will install OSQUERY 4.1.1 endpoint visibility agent,"
+echo -e "and Splunk Universal Forwarder and other dependencies. In addition" 
+echo -e "it will download the predetermined configuration files.\e[0m "
+echo
+echo -e "\e[95mUpdating System..."
+echo -e "This may take some time..."
+sudo apt-get update > /dev/null 2>&1
+echo "..................."
+sudo apt-get -y upgrade > /dev/null 2>&1
+echo "[*] Complete."
+echo
 
 #                       APT PACKAGES INSTALL
 # ---------------------------------------------------------------------
 
-sudo apt-get install -y lsof nmap clamav debsums fail2ban git
-
+echo "Installing Dependencies..."
+echo
+sudo apt-get install -y lsof nmap clamav debsums fail2ban git > /dev/null 2>&1
+echo
+echo -e "[*] Complete.\e[0m"
+echo
 #                         CONFIG DOWNLOADS
 # ---------------------------------------------------------------------
 
 # cd ~/Documents
 # git clone https://github.com/dbarr914/CCDC.git
+
 
 #                           LYNIS INSTALL
 # ---------------------------------------------------------------------
@@ -67,76 +87,46 @@ download_splunk(){
  }
 
 install_splunk(){
- echo "\e[93m[*] Installing Splunk Universal Forwarder.....\e[0m"
- tar -xzvf /tmp/splunk-8.tgz -C /opt
+ echo -e "\e[93m[*] Installing Splunk Universal Forwarder.....\e[0m"
+ sudo tar -xzvf /tmp/splunkforwarder-8.tgz -C /opt
  echo
- echo "\e[93m[*] Splunk UFW Installed.\e[0m"
- rm -f /tmp/splunk-8.tgz
+ echo -e "\e[93m[*] Splunk UFW Installed.\e[0m"
+ rm -f /tmp/splunkforwarder-8.tgz
 }
 
 add_user(){
  echo "[*] Creating Splunk User....."
- useradd -r splunk -s /bin/nologin
- chown -R splunk:splunk /opt/splunk
+ useradd splunk 
+ chown -R splunk:splunk /opt/splunkforwarder
  echo
  echo "[*] Splunk User Created."
  echo
 } 
 
-download_splunk
-install_splunk
-add_user
-
-cd /opt/splunkforwarder/bin
-sudo ./splunk start --accept-license
-sudo ./splunk enable boot-start
-sudo ./splunk add forward-server "$indexerip":9997
-sudo ./splunk restart
-
-#                          OSQUERY INSTALL
-# ---------------------------------------------------------------------
-
-download_osquery(){
- cd /tmp
+initial_run(){
  echo
- echo "\e[93m[*] Downloading Osquery Agent.....\e[0m"
- wget https://pkg.osquery.io/deb/osquery_4.0.2_1.linux.amd64.deb
+ echo "[*] Running initial start....."
  echo
- echo "\e[93m[*] Osquery Agent Downloaded.\e[0m"
+ /opt/splunkforwarder/bin/splunk start --accept-license
+ /opt/splunkforwarder/bin/splunk stop /dev/null 2>&1
  echo
- }
-
-install_osquery(){
- echo "\e[93m[*] Installing Osquery User Agent.....\e[0m"
- sudo dpkg -i osquery_4.0.2_1.linux.amd64.deb
+ echo "[*] Complete."
  echo
- echo "\e[93m[*] Osquery Agent Installed.\e[0m"
- rm -f /tmp/osquery_4.0.2_1.linux.amd64.deb
+ echo "[*] Enabling Splunk to start at boot....."
+ echo
+ /opt/splunkforwarder/bin/splunk enable boot-start
+ echo
+ echo "[*] Complete."
+ echo
 }
 
-download_osquery
-install_osquery
-
-config_osquery(){
- sudo cp ./Documents/CCDC-master/osquery/1.Linux/osquery.conf /etc/osquery/osquery.conf
- sudo cp ./Documents/CCDC-master/osquery/1.Linux/osquery.flags /etc/osquery/osquery.flags
- sudo cp -rf ./Documents/CCDC-master/osquery/1.Linux/packs/ /etc/osquery/packs
- sudo cp -rf ./Documents/CCDC-master/osquery/1.Linux/packs/ /usr/share/osquery/packs
- sudo osqueryctl config-check
- sudo osqueryctl start
-}
-
-config_osquery
-
-
-#                         CONFIGURING INPUTS.CONF
+#                           EDIT SPLUNK INPUTS 
 # ---------------------------------------------------------------------
 
 edit_inputs(){
- 
  echo "[*] Editing Splunk's input file...."
 
- cd /opt/splunkforwarder/etc/system/local 
+ cd /opt/splunkforwarder/etc/system/local
 
  echo -e "[monitor:///var/log/osquery/osqueryd.results.log]\nindex = osquery\nsourcetype = osquery:results\n\n" >> inputs.conf
  echo -e "[monitor:///var/log/osquery/osqueryd.*ERROR*]\nindex = osquery\nsourcetype = osquery:error\n\n" >> inputs.conf
@@ -145,18 +135,69 @@ edit_inputs(){
  
  echo "[*] Complete."
  echo "[*] Adding directories to monitor..." 
+ echo
+ cd /opt/splunkforwarder/bin/
+
+ # sudo ./splunk add monitor /var/log
+ # sudo ./splunk add monitor /etc/
  
- cd /opt/splunk/bin/
- 
+ echo "[*] Complete."
+ echo
+ echo "[*] Adding forward-server..." 
+ echo
+ sudo ./splunk add forward-server "$indexerip":9997
+ echo
  echo "[*] Complete."
  echo
  echo "[*] Restarting Splunk..."
- 
- sudo ./splunk restart
- 
+ echo
+ sudo ./splunk restart > /dev/null 2>&1
+ echo
+ sudo ./splunk status
  echo "[*] Complete."
  echo
-
 }
 
+#                          OSQUERY INSTALL
+# ---------------------------------------------------------------------
+
+download_osquery(){
+ cd /tmp
+ echo
+ echo -e "\e[93m[*] Downloading Osquery Agent.....\e[0m"
+ wget https://pkg.osquery.io/deb/osquery_4.1.1_1.linux.amd64.deb
+ echo
+ echo -e "\e[93m[*] Osquery Agent Downloaded.\e[0m"
+ echo
+ }
+
+install_osquery(){
+ echo -e "\e[93m[*] Installing Osquery User Agent.....\e[0m"
+ sudo dpkg -i osquery_4.1.1_1.linux.amd64.deb
+ echo
+ echo -e "\e[93m[*] Osquery Agent Installed.\e[0m"
+ rm -f /tmp/osquery_4.1.1_1.linux.amd64.deb
+}
+
+#                    MOVE CONFIGS TO CORRECT LOCATIONS
+# ---------------------------------------------------------------------
+
+config_osquery(){
+
+ cp "/home/$userhome/Documents/CCDC/osquery/1.Linux/osquery.conf" /etc/osquery/osquery.conf
+ cp "/home/$userhome/Documents/CCDC/osquery/1.Linux/osquery.flags" /etc/osquery/osquery.flags
+ cp -rf "/home/$userhome/Documents/CCDC/osquery/1.Linux/packs/" /etc/osquery/
+ cp -rf "/home/$userhome/Documents/CCDC/osquery/1.Linux/packs/" /usr/share/osquery/
+
+ osqueryctl config-check
+ osqueryctl start
+}
+
+download_splunk
+install_splunk
+add_user
+initial_run
+download_osquery
+install_osquery
+config_osquery
 edit_inputs
