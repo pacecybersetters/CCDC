@@ -79,10 +79,10 @@ echo
 download_splunk(){
  cd /tmp
  echo
- echo "\e[93m[*] Downloading Splunk Universal Forwarder.....\e[0m"
+ echo -e "\e[93m[*] Downloading Splunk Universal Forwarder.....\e[0m"
  wget -O splunkforwarder-8.tgz 'https://www.splunk.com/bin/splunk/DownloadActivityServlet?architecture=x86_64&platform=linux&version=8.0.1&product=universalforwarder&filename=splunkforwarder-8.0.1-6db836e2fb9e-Linux-x86_64.tgz&wget=true'
  echo
- echo "\e[93m[*] Splunk UFW Downloaded.\e[0m"
+ echo -e "\e[93m[*] Splunk UFW Downloaded.\e[0m"
  echo
  }
 
