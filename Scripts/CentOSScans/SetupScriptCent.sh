@@ -71,16 +71,16 @@ download_splunk(){
 
 install_splunk(){
  echo -e "\e[93m[*] Installing Splunk Universal Forwarder.....\e[0m"
- sudo tar -xzvf /tmp/splunk-8.tgz -C /opt
+ sudo tar -xzvf /tmp/splunkforwarder-8.tgz -C /opt
  echo
  echo -e "\e[93m[*] Splunk UFW Installed.\e[0m"
- rm -f /tmp/splunk-8.tgz
+ rm -f /tmp/splunkforwarder-8.tgz
 }
 
 add_user(){
  echo "[*] Creating Splunk User....."
- sudo useradd -r splunk -s /bin/nologin
- sudo chown -R splunk:splunk /opt/splunk
+ useradd splunk 
+ chown -R splunk:splunk /opt/splunkforwarder
  echo
  echo "[*] Splunk User Created."
  echo
@@ -90,14 +90,14 @@ initial_run(){
  echo
  echo "[*] Running initial start....."
  echo
- /opt/splunk/bin/splunk start --accept-license
- /opt/splunk/bin/splunk stop /dev/null 2>&1
+ /opt/splunkforwarder/bin/splunk start --accept-license
+ /opt/splunkforwarder/bin/splunk stop /dev/null 2>&1
  echo
  echo "[*] Complete."
  echo
  echo "[*] Enabling Splunk to start at boot....."
  echo
- /opt/splunk/bin/splunk enable boot-start
+ /opt/splunkforwarder/bin/splunk enable boot-start
  echo
  echo "[*] Complete."
  echo
@@ -119,7 +119,7 @@ edit_inputs(){
  echo "[*] Complete."
  echo "[*] Adding directories to monitor..." 
  echo
- cd /opt/splunk/bin/
+ cd /opt/splunkforwarder/bin/
 
  # sudo ./splunk add monitor /var/log
  # sudo ./splunk add monitor /etc/
@@ -147,18 +147,18 @@ edit_inputs(){
 download_osquery(){
  cd /tmp
  echo
- echo "\e[93m[*] Downloading Osquery Agent.....\e[0m"
+ echo -e "\e[93m[*] Downloading Osquery Agent.....\e[0m"
  wget https://pkg.osquery.io/rpm/osquery-4.1.1-1.linux.x86_64.rpm
  echo
- echo "\e[93m[*] Osquery Agent Downloaded.\e[0m"
+ echo -e "\e[93m[*] Osquery Agent Downloaded.\e[0m"
  echo
  }
 
 install_osquery(){
- echo "\e[93m[*] Installing Osquery User Agent.....\e[0m"
+ echo -e "\e[93m[*] Installing Osquery User Agent.....\e[0m"
  sudo rpm -i osquery-4.1.1-1.linux.x86_64.rpm
  echo
- echo "\e[93m[*] Osquery Agent Installed.\e[0m"
+ echo -e "\e[93m[*] Osquery Agent Installed.\e[0m"
  rm -f /tmp/osquery-4.1.1-1.linux.x86_64.rpm
 }
 
