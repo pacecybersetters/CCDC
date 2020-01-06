@@ -267,7 +267,7 @@ download_osquery(){
 install_osquery(){
  echo -e "[*] Installing Osquery User Agent....."
  echo
- sudo rpm -i osquery-4.1.1-1.linux.x86_64.rpm > /dev/null 2>&1
+ sudo rpm -i osquery-4.1.1-1.linux.x86_64.rpm | tee -a $(hostname)_install.file
  echo
  echo -e "[*] Osquery Agent Installed.\e[0m"
  echo
