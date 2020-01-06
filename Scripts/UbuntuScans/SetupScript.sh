@@ -108,6 +108,7 @@ initial_run(){
  echo "[*] Running initial start....."
  echo
  sudo /opt/splunkforwarder/bin/splunk start --accept-license
+ sleep 2
  sudo /opt/splunkforwarder/bin/splunk stop | tee -a *_install.file
  echo
  echo "[*] Complete."
