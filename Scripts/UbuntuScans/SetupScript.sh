@@ -20,7 +20,7 @@
 #                            VARIABLES
 # ---------------------------------------------------------------------
 
-read -p "\e[93m What is the IP Address of the Splunk Indexer? \e[0m" indexerip
+read -p "What is the IP Address of the Splunk Indexer? " indexerip
 echo
 read -p "What is the user's home directory where the git repo is stored? " userhome
 echo
@@ -107,14 +107,14 @@ initial_run(){
  echo
  echo "[*] Running initial start....."
  echo
- /opt/splunkforwarder/bin/splunk start --accept-license
- /opt/splunkforwarder/bin/splunk stop /dev/null 2>&1
+ sudo /opt/splunkforwarder/bin/splunk start --accept-license
+ sudo /opt/splunkforwarder/bin/splunk stop /dev/null 2>&1
  echo
  echo "[*] Complete."
  echo
  echo "[*] Enabling Splunk to start at boot....."
  echo
- /opt/splunkforwarder/bin/splunk enable boot-start
+ sudo /opt/splunkforwarder/bin/splunk enable boot-start
  echo
  echo "[*] Complete."
  echo
