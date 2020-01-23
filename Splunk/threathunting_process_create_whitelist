@@ -1,0 +1,1 @@
+process_create_whitelist, mitre_technique_id, host_fqdn, user_name, process_path, process_parent_path, process_command_line, output, reason'
